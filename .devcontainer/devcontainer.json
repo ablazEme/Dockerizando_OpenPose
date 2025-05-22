@@ -1,0 +1,55 @@
+{
+  "name": "OpenPose Development (RTX 3050 Optimized)",
+  "dockerComposeFile": "../docker-compose.yml",
+  "service": "openpose",
+  "workspaceFolder": "/usr/local/openpose",
+  "shutdownAction": "stopCompose",
+  "remoteUser": "root",
+  "extensions": [
+    "ms-vscode.cpptools",
+    "twxs.cmake",
+    "ms-python.python",
+    "eamodio.gitlens",
+    "augusterame.cudatoolkit-11-1"  // Critical for CUDA 11.1
+  ],
+  "settings": {
+    "terminal.integrated.defaultProfile.linux": "bash",
+    "cmake.configureOnOpen": false,  // Disable auto-configure for large projects
+    "cmake.buildArgs": [
+      "--parallel 4",  // Matches OMP_NUM_THREADS
+      "--target install"
+    ],
+    "C_Cpp.default.compilerPath": "/usr/bin/g++-9",
+    "python.pythonPath": "/usr/bin/python3",
+    "python.linting.enabled": false  // Reduces memory usage
+  },
+  "forwardPorts": [],
+  "runArgs": [
+    "--runtime=nvidia",
+    "--gpus=all",
+    "--ipc=host",
+    "--ulimit memlock=-1:-1"
+  ],
+  "mounts": [
+    {
+      "source": "/tmp/.X11-unix",
+      "target": "/tmp/.X11-unix",
+      "type": "bind"
+    }, 
+    {
+      "source": "${env:HOME}/.Xauthority",
+      "target": "/root/.Xauthority",
+      "type": "bind"
+    },
+    {
+      "source": "${env:HOME}/.nv",
+      "target": "/root/.nv",
+      "type": "bind"  // For CUDA cache persistence
+    }
+  ],
+  "containerEnv": {
+    "CUDA_CACHE_PATH": "/tmp/cuda_cache",
+    "TF_FORCE_GPU_ALLOW_GROWTH": "true",
+    "OPENPOSE_ROOT": "/usr/local/openpose"
+  }
+}

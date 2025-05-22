@@ -1,0 +1,37 @@
+services:
+  openpose:
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile
+    runtime: nvidia
+    shm_size: '2gb'  # Critical for OpenPose multiprocessing
+    ipc: host  # Required for Python multiprocessing
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=compute,utility,graphics,video
+      - CUDA_VISIBLE_DEVICES=0  # Explicitly use only GPU 0
+      - OMP_NUM_THREADS=4  # Reduced for 4GB VRAM
+      - OPENBLAS_NUM_THREADS=4
+      - GOTO_NUM_THREADS=4
+      - CUBLAS_WORKSPACE_CONFIG=:16:8  # Prevents cuBLAS crashes
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+        limits:
+          cpus: '4'  # Limits CPU cores
+          memory: 7g
+    ulimits:
+      memlock: -1  # Essential for CUDA
+      stack: 67108864  # 64MB stack size
+    volumes:
+      - ./models:/usr/local/openpose/models  # For custom models
+      - /tmp/.X11-unix:/tmp/.X11-unix  # For display if needed
+    working_dir: /usr/local/openpose
+    labels:
+      - "docker.scout.enabled=false"
+    tty: true
+    stdin_open: true
