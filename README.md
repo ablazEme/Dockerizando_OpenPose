@@ -1,16 +1,6 @@
 # openpose-docker
 
-My Docker image for [OpenPose](https://github.com/CMU-Perceptual-Computing-Lab/openpose).
-
-The original `Dockerfile` is from [here](https://github.com/myoshimi/openpose-docker).
-
-## Changes from orginal
-
-- base image to `nvidia/cuda:11.1.1-cudnn8-devel-ubuntu20.04`.
-
-- install `cmake` via `apt`.
-
-- `qtbase5-dev` not installed.
+Clonar todo el repositorio. Este sirve para tener una imagen con Openpose y también para generar un ambiente de desarrollo interactivo en VS Code. Esto lo hice para hacer desarrollo en windows.
 
 ## Enviornment
 
@@ -19,21 +9,9 @@ Only critical ones.
 - Hardware
 
     ```text
-    GPU : GeForce RTX 2060 SUPER
-    ```
-    Turing architecture.
-
-- OS
-
-    ```text
-    Ubuntu 20.04.2 LTS
+    GPU : GeForce RTX 3050
     ```
 
-- nvidia-driver
-
-    ```text
-    nvidia-driver-460
-    ```
 
 ## Usage
 
